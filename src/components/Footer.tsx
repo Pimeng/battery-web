@@ -9,12 +9,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-interface ChangelogEntry {
-  sha: string;
-  type: string;
-  message: string;
-  date: string;
-}
+// 由 Vite 插件在构建时注入
+const VERSION = __APP_VERSION__;
+const GIT_SHA = __APP_GIT_SHA__;
+const CHANGELOG = __APP_CHANGELOG__;
 
 // 提交类型翻译映射
 const typeTranslations: Record<string, string> = {
@@ -49,23 +47,7 @@ const getTypeColor = (type: string): string => {
   return colors[type] || 'bg-gray-100 text-gray-700';
 };
 
-// 更新日志数据（从 git log 提取）
-const changelogData: ChangelogEntry[] = [
-  { sha: '50eb7d7', type: 'feat', message: '适配一些奇奇怪怪的屏幕宽度', date: '2026-03-05 15:23' },
-  { sha: 'e32ffd8', type: 'feat', message: '公告弹窗添加动画', date: '2026-03-05 14:48' },
-  { sha: '430b216', type: 'chore', message: '删除dist', date: '2026-03-05 14:45' },
-  { sha: '22be100', type: 'feat', message: '历史查询过的房间高亮，历史记录功能简化，地址栏可直接点击回退到对应的选区，排序功能优化', date: '2026-03-05 14:44' },
-  { sha: '4f40a93', type: 'feat', message: '地址栏可以回退进度', date: '2026-03-05 14:33' },
-  { sha: '93518b0', type: 'feat', message: '优化查询电量显示', date: '2026-03-05 14:24' },
-  { sha: 'f0b4aa8', type: 'other', message: 'first commit', date: '2026-03-05 14:02' }
-];
-
-interface FooterProps {
-  version?: string;
-  gitSha?: string;
-}
-
-export function Footer({ version = '0.0.1', gitSha = '50eb7d7' }: FooterProps) {
+export function Footer() {
   const [open, setOpen] = useState(false);
 
   return (
@@ -86,12 +68,12 @@ export function Footer({ version = '0.0.1', gitSha = '50eb7d7' }: FooterProps) {
           >
             <Tag className="w-3 h-3 text-gray-400 group-hover:text-gray-500" />
             <span className="text-xs text-gray-400 group-hover:text-gray-500">
-              v{version}
+              v{VERSION}
             </span>
             <span className="text-gray-300">|</span>
             <GitCommit className="w-3 h-3 text-gray-400 group-hover:text-gray-500" />
             <span className="text-xs font-mono text-gray-400 group-hover:text-gray-500">
-              {gitSha}
+              {GIT_SHA}
             </span>
           </button>
         </div>
@@ -113,7 +95,7 @@ export function Footer({ version = '0.0.1', gitSha = '50eb7d7' }: FooterProps) {
               <div className="absolute left-9 top-4 bottom-4 w-px bg-gray-200" />
               
               <div className="space-y-0">
-                {changelogData.map((entry, index) => (
+                {CHANGELOG.map((entry, index) => (
                   <div
                     key={entry.sha}
                     className="relative flex gap-4 pb-6 last:pb-0"

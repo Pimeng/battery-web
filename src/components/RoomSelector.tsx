@@ -261,7 +261,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
 
   if (!data) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-400 dark:text-gray-500">
         <span className="text-sm">加载中...</span>
       </div>
     );
@@ -278,7 +278,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
           completed={!!selection.area}
           onClick={() => selection.area && handleBack('area')}
         />
-        <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-gray-300 flex-shrink-0" />
+        <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-gray-300 dark:text-gray-600 flex-shrink-0" />
         <StepIndicator 
           icon={<Building2 className="w-3 h-3" />} 
           label="楼栋" 
@@ -287,7 +287,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
           onClick={() => selection.building && selection.step !== 'area' && handleBack('building')}
           disabled={!selection.area}
         />
-        <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-gray-300 flex-shrink-0" />
+        <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-gray-300 dark:text-gray-600 flex-shrink-0" />
         <StepIndicator 
           icon={<Layers className="w-3 h-3" />} 
           label="楼层" 
@@ -296,7 +296,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
           onClick={() => selection.floor && selection.step !== 'area' && selection.step !== 'building' && handleBack('floor')}
           disabled={!selection.building}
         />
-        <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-gray-300 flex-shrink-0" />
+        <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-gray-300 dark:text-gray-600 flex-shrink-0" />
         <StepIndicator 
           icon={<DoorOpen className="w-3 h-3" />} 
           label="房间" 
@@ -308,11 +308,11 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
 
       {/* Selection Path - 可点击回退的面包屑导航 */}
       {selection.area && (
-        <div className="flex items-center gap-1.5 p-2.5 sm:p-3 rounded-xl bg-gray-50 text-[10px] sm:text-xs flex-wrap">
+        <div className="flex items-center gap-1.5 p-2.5 sm:p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 text-[10px] sm:text-xs flex-wrap">
           {/* 分区 - 点击回退到分区选择 */}
           <button
             onClick={() => handleBack('area')}
-            className="font-medium text-gray-700 hover:text-[oklch(0.65_0.12_250)] hover:bg-[oklch(0.75_0.1_250_/0.1)] px-2 py-1 rounded-lg transition-all"
+            className="font-medium text-gray-700 dark:text-gray-300 hover:text-[oklch(0.65_0.12_250)] hover:bg-[oklch(0.75_0.1_250_/0.1)] px-2 py-1 rounded-lg transition-all"
             title="点击回退到分区选择"
           >
             {selection.area.area_name}
@@ -320,11 +320,11 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
           
           {selection.building && (
             <>
-              <ChevronRight className="w-3 h-3 text-gray-400 flex-shrink-0" />
+              <ChevronRight className="w-3 h-3 text-gray-400 dark:text-gray-500 flex-shrink-0" />
               {/* 楼栋 - 点击回退到楼栋选择 */}
               <button
                 onClick={() => handleBack('building')}
-                className="font-medium text-gray-700 hover:text-[oklch(0.65_0.12_250)] hover:bg-[oklch(0.75_0.1_250_/0.1)] px-2 py-1 rounded-lg transition-all"
+                className="font-medium text-gray-700 dark:text-gray-300 hover:text-[oklch(0.65_0.12_250)] hover:bg-[oklch(0.75_0.1_250_/0.1)] px-2 py-1 rounded-lg transition-all"
                 title="点击回退到楼栋选择"
               >
                 {selection.building.building_name}
@@ -337,7 +337,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
               {/* 楼层 - 点击回退到楼层选择 */}
               <button
                 onClick={() => handleBack('floor')}
-                className="font-medium text-gray-700 hover:text-[oklch(0.65_0.12_250)] hover:bg-[oklch(0.75_0.1_250_/0.1)] px-2 py-1 rounded-lg transition-all"
+                className="font-medium text-gray-700 dark:text-gray-300 hover:text-[oklch(0.65_0.12_250)] hover:bg-[oklch(0.75_0.1_250_/0.1)] px-2 py-1 rounded-lg transition-all"
                 title="点击回退到楼层选择"
               >
                 {selection.floor.floor_name}
@@ -355,10 +355,10 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
           )}
           <button
             onClick={handleReset}
-            className="ml-auto p-1.5 rounded-lg hover:bg-gray-200 transition-colors"
+            className="ml-auto p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             title="重新选择"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
+            <RotateCcw className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300" />
           </button>
         </div>
       )}
@@ -444,8 +444,8 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
                       isSelected
                         ? 'bg-[oklch(0.75_0.1_250)] text-white shadow-sm'
                         : inHistory
-                          ? 'bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200'
-                          : 'bg-gray-50 text-gray-700 hover:bg-[oklch(0.75_0.1_250_/0.1)] hover:text-[oklch(0.75_0.1_250)] border border-gray-100'
+                          ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 border border-amber-200 dark:border-amber-800'
+                          : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-[oklch(0.75_0.1_250_/0.1)] dark:hover:bg-[oklch(0.75_0.1_250_/0.15)] hover:text-[oklch(0.75_0.1_250)] border border-gray-100 dark:border-gray-700'
                     }`}
                     title={inHistory ? '该房间曾在历史记录中' : undefined}
                   >
@@ -465,8 +465,8 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
             <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-3">
               <Check className="w-6 h-6 text-green-600" />
             </div>
-            <p className="text-sm font-medium text-gray-700">已选择房间</p>
-            <p className="text-lg font-bold text-gray-800 mt-1">{selection.room.room_name}</p>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">已选择房间</p>
+            <p className="text-lg font-bold text-gray-800 dark:text-gray-100 mt-1">{selection.room.room_name}</p>
             <Button
               variant="outline"
               size="sm"
@@ -503,7 +503,7 @@ function StepIndicator({ icon, label, active, completed, onClick, disabled }: St
           ? 'bg-[oklch(0.75_0.1_250)] text-white'
           : completed
             ? 'bg-[oklch(0.75_0.1_250_/0.1)] text-[oklch(0.75_0.1_250)] hover:bg-[oklch(0.75_0.1_250_/0.2)]'
-            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+            : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
       }`}
     >
       <span className="w-3 h-3 sm:w-3.5 sm:h-3.5">{icon}</span>
@@ -536,8 +536,8 @@ function SelectionCard({ icon, title, subtitle, onClick, isInHistory = false }: 
       onClick={onClick}
       className={`flex flex-col items-center p-3 sm:p-4 rounded-xl border transition-all group relative ${
         isInHistory
-          ? 'bg-amber-50/80 border-amber-200 hover:bg-amber-100 hover:border-amber-300'
-          : 'bg-gray-50 border-gray-100 hover:bg-[oklch(0.75_0.1_250_/0.1)] hover:border-[oklch(0.75_0.1_250_/0.3)]'
+          ? 'bg-amber-50/80 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/40 hover:border-amber-300 dark:hover:border-amber-700'
+          : 'bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-700 hover:bg-[oklch(0.75_0.1_250_/0.1)] dark:hover:bg-[oklch(0.75_0.1_250_/0.15)] hover:border-[oklch(0.75_0.1_250_/0.3)] dark:hover:border-[oklch(0.75_0.1_250_/0.4)]'
       }`}
       title={isInHistory ? '该楼栋曾在历史记录中' : undefined}
     >
@@ -555,10 +555,10 @@ function SelectionCard({ icon, title, subtitle, onClick, isInHistory = false }: 
       </div>
       <span className={`mt-1.5 sm:mt-2 text-xs sm:text-sm font-medium truncate w-full text-center ${
         isInHistory 
-          ? 'text-amber-800 group-hover:text-amber-900' 
-          : 'text-gray-700 group-hover:text-[oklch(0.75_0.1_250)]'
+          ? 'text-amber-800 dark:text-amber-400 group-hover:text-amber-900 dark:group-hover:text-amber-300' 
+          : 'text-gray-700 dark:text-gray-300 group-hover:text-[oklch(0.75_0.1_250)]'
       }`}>{title}</span>
-      <span className={`text-[10px] sm:text-xs ${isInHistory ? 'text-amber-600/70' : 'text-gray-400'}`}>{subtitle}</span>
+      <span className={`text-[10px] sm:text-xs ${isInHistory ? 'text-amber-600/70 dark:text-amber-500/70' : 'text-gray-400'}`}>{subtitle}</span>
     </button>
   );
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Search, Zap, History, Trash2, Bell, MapPin, ChevronDown } from 'lucide-react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -236,7 +237,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 transition-colors duration-300">
       {/* Notice Toast */}
       {showNotice && notice && (
         <NoticeToast 
@@ -246,7 +247,7 @@ function App() {
       )}
 
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100">
+      <header className="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
         <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-3">
@@ -254,16 +255,17 @@ function App() {
                 <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-base sm:text-lg font-bold text-gray-800">电量查询</h1>
-                <p className="text-[10px] sm:text-xs text-gray-500">喵喵喵？</p>
+                <h1 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100">电量查询</h1>
+                <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">喵喵喵？</p>
               </div>
             </div>
             
             <div className="flex items-center gap-2">
+              <ThemeToggle />
               {notice && (
                 <button
                   onClick={() => setShowNotice(true)}
-                  className="p-2 sm:p-2.5 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
+                  className="p-2 sm:p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
                   aria-label="查看通知"
                 >
                   <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -294,7 +296,7 @@ function App() {
           {/* Scroll hint - shown when battery result is hidden */}
           {!showBatteryResult && (
             <div className="lg:col-span-3 flex justify-center">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-400 animate-bounce">
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-400 dark:text-gray-500 animate-bounce">
                 <span>请选择房间查看电量</span>
                 <ChevronDown className="w-4 h-4" />
               </div>
@@ -302,7 +304,7 @@ function App() {
           )}
           {/* Room Selector */}
           <div className="lg:col-span-2">
-            <Card className="border-0 shadow-sm">
+            <Card className="border-0 shadow-sm dark:bg-gray-800/50 dark:border dark:border-gray-700/50">
               <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-6">
                 <CardTitle className="text-sm sm:text-base font-medium flex items-center gap-2">
                   <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center text-[oklch(0.75_0.1_250)]">
@@ -325,7 +327,7 @@ function App() {
           {/* Right panel: Quick Query & History */}
           <div className="lg:col-span-1 space-y-4 sm:space-y-6">
             {/* Quick Query Card */}
-            <Card className="border-0 shadow-sm">
+            <Card className="border-0 shadow-sm dark:bg-gray-800/50 dark:border dark:border-gray-700/50">
               <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-6">
                 <CardTitle className="text-sm sm:text-base font-medium flex items-center gap-2">
                   <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center text-[oklch(0.75_0.1_250)]">
@@ -348,10 +350,10 @@ function App() {
                       {roomInput && (
                         <button
                           onClick={handleClear}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                           aria-label="清空输入"
                         >
-                          <Trash2 className="w-4 h-4 text-gray-400" />
+                          <Trash2 className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                         </button>
                       )}
                     </div>
@@ -369,11 +371,11 @@ function App() {
                     </Button>
                   </div>
                   
-                  <div className="p-2.5 sm:p-3 rounded-xl bg-gray-50">
-                    <p className="text-[10px] sm:text-xs text-gray-400">
+                  <div className="p-2.5 sm:p-3 rounded-xl bg-gray-50 dark:bg-gray-800">
+                    <p className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500">
                       格式: 分区ID-楼栋ID--楼层ID-房间号
                     </p>
-                    <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
+                    <p className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 mt-1">
                       例: 1-1--45-1419
                     </p>
                   </div>
@@ -407,7 +409,7 @@ function App() {
       </main>
 
       {/* Footer */}
-      <Footer version="0.0.1" gitSha="50eb7d7" />
+      <Footer />
     </div>
   );
 }
