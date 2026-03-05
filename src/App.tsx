@@ -10,6 +10,7 @@ import { NoticeToast } from '@/components/NoticeToast';
 import { RoomSelector } from '@/components/RoomSelector';
 import { HistoryList } from '@/components/HistoryList';
 import { BatteryResult } from '@/components/BatteryResult';
+import { Footer } from '@/components/Footer';
 import type { RoomsTree, Notice, HistoryItem, Room } from '@/types';
 
 function App() {
@@ -406,16 +407,7 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-12 py-6 border-t border-gray-100">
-        <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto px-3 sm:px-4 text-center">
-          <p className="text-sm text-gray-400">
-            非华夏官方，一切以官方数据为准
-          </p>
-          <p className="text-xs text-gray-300 mt-1">
-            数据仅供参考，请以实际为准
-          </p>
-        </div>
-      </footer>
+      <Footer version="0.0.1" gitSha="50eb7d7" />
     </div>
   );
 }
