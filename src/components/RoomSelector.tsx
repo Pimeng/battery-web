@@ -132,13 +132,28 @@ interface SelectionState {
 }
 
 export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] }: RoomSelectorProps) {
-  const [selection, setSelection] = useState<SelectionState>({
-    step: 'area',
-    area: null,
-    building: null,
-    floor: null,
-    room: null,
-  });
+  // 检查是否只有一个分区，如果是则自动选择
+  const initialState = useMemo<SelectionState>(() => {
+    if (data && data.areas.length === 1) {
+      // 只有一个分区，直接进入楼栋选择
+      return {
+        step: 'building',
+        area: data.areas[0],
+        building: null,
+        floor: null,
+        room: null,
+      };
+    }
+    return {
+      step: 'area',
+      area: null,
+      building: null,
+      floor: null,
+      room: null,
+    };
+  }, [data]);
+
+  const [selection, setSelection] = useState<SelectionState>(initialState);
   
   // Use ref to track latest building to avoid closure issues
   // Initialize with selection.building for initial render
@@ -159,13 +174,24 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
 
   // Reset selection
   const handleReset = () => {
-    setSelection({
-      step: 'area',
-      area: null,
-      building: null,
-      floor: null,
-      room: null,
-    });
+    if (data && data.areas.length === 1) {
+      // 只有一个分区时，重置回楼栋选择
+      setSelection({
+        step: 'building',
+        area: data.areas[0],
+        building: null,
+        floor: null,
+        room: null,
+      });
+    } else {
+      setSelection({
+        step: 'area',
+        area: null,
+        building: null,
+        floor: null,
+        room: null,
+      });
+    }
   };
 
   // Handle area selection
@@ -383,6 +409,13 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
               />
             ))}
           </SelectionGrid>
+        )}
+
+        {/* 单分区时显示提示 */}
+        {selection.step === 'building' && data.areas.length === 1 && !selection.building && (
+          <div className="text-center py-4 text-gray-500 dark:text-gray-400">
+            <p className="text-sm">请选择楼栋</p>
+          </div>
         )}
 
         {selection.step === 'building' && selection.area && (
