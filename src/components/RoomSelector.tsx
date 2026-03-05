@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { ChevronRight, MapPin, Building2, Layers, DoorOpen, Check, RotateCcw } from 'lucide-react';
-import type { RoomsTree, Area, Building, Floor, Room } from '@/types';
+import { ChevronRight, MapPin, Building2, Layers, DoorOpen, Check, RotateCcw, Clock } from 'lucide-react';
+import type { RoomsTree, Area, Building, Floor, Room, HistoryItem } from '@/types';
 import { Button } from '@/components/ui/button';
 
 /**
@@ -47,16 +47,78 @@ function naturalSortCompare(a: string, b: string): number {
 }
 
 /**
- * 对数组进行自然排序
+ * 对数组进行自然排序，历史记录中的项目排在前面
  */
-function naturalSort<T extends { [key: string]: any }>(array: T[], keyExtractor: (item: T) => string): T[] {
-  return [...array].sort((a, b) => naturalSortCompare(keyExtractor(a), keyExtractor(b)));
+function naturalSort<T extends { [key: string]: any }>(
+  array: T[],
+  keyExtractor: (item: T) => string,
+  priorityIds?: Set<string>,
+  idExtractor?: (item: T) => string
+): T[] {
+  return [...array].sort((a, b) => {
+    // 如果有优先级ID集合，先按优先级排序
+    if (priorityIds && idExtractor) {
+      const aId = idExtractor(a);
+      const bId = idExtractor(b);
+      const aInHistory = priorityIds.has(aId);
+      const bInHistory = priorityIds.has(bId);
+      
+      if (aInHistory && !bInHistory) return -1;
+      if (!aInHistory && bInHistory) return 1;
+    }
+    
+    // 再按自然排序
+    return naturalSortCompare(keyExtractor(a), keyExtractor(b));
+  });
+}
+
+/**
+ * 从历史记录中提取所有相关的ID
+ * 同时根据 roomsData 查找房间对应的楼层ID
+ */
+function extractHistoryIds(
+  history: HistoryItem[] = [],
+  data: RoomsTree | null
+): {
+  roomIds: Set<string>;
+  roomNames: Set<string>;
+  buildingNames: Set<string>;
+  floorIds: Set<string>;
+} {
+  const roomIds = new Set<string>();
+  const roomNames = new Set<string>();
+  const buildingNames = new Set<string>();
+  const floorIds = new Set<string>();
+  
+  history.forEach(item => {
+    roomIds.add(item.roomId);
+    roomNames.add(item.roomName);
+    buildingNames.add(item.buildingName);
+    
+    // 从 roomsData 中查找该房间对应的楼层ID
+    if (data) {
+      for (const area of data.areas) {
+        for (const building of area.buildings) {
+          for (const floor of building.floors) {
+            const room = floor.rooms.find(r => r.room_id === item.roomId);
+            if (room) {
+              floorIds.add(floor.floor_id);
+              break;
+            }
+          }
+        }
+      }
+    }
+  });
+  
+  return { roomIds, roomNames, buildingNames, floorIds };
 }
 
 interface RoomSelectorProps {
   data: RoomsTree | null;
   onSelectRoom: (room: Room, buildingName: string) => void;
   selectedRoomId: string | null;
+  history?: HistoryItem[];
 }
 
 type SelectionStep = 'area' | 'building' | 'floor' | 'room' | 'complete';
@@ -69,7 +131,7 @@ interface SelectionState {
   room: Room | null;
 }
 
-export function RoomSelector({ data, onSelectRoom, selectedRoomId }: RoomSelectorProps) {
+export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] }: RoomSelectorProps) {
   const [selection, setSelection] = useState<SelectionState>({
     step: 'area',
     area: null,
@@ -84,6 +146,9 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId }: RoomSelecto
   
   // Ref to prevent double-click on room selection
   const isSelectingRef = useRef(false);
+  
+  // 从历史记录中提取ID，用于高亮显示
+  const historyIds = useMemo(() => extractHistoryIds(history, data), [history, data]);
   
   // Sync ref with state - only update when building actually changes and is not null
   useEffect(() => {
@@ -302,13 +367,19 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId }: RoomSelecto
       <div className="min-h-[200px]">
         {selection.step === 'area' && (
           <SelectionGrid>
-            {naturalSort(data.areas, (area) => area.area_name).map((area) => (
+            {naturalSort(
+              data.areas,
+              (area) => area.area_name,
+              undefined,
+              undefined
+            ).map((area) => (
               <SelectionCard
                 key={area.area_id}
                 icon={<MapPin className="w-5 h-5" />}
                 title={area.area_name}
                 subtitle={`${area.buildings.length} 栋楼`}
                 onClick={() => handleSelectArea(area)}
+                isInHistory={false}
               />
             ))}
           </SelectionGrid>
@@ -316,13 +387,19 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId }: RoomSelecto
 
         {selection.step === 'building' && selection.area && (
           <SelectionGrid>
-            {naturalSort(selection.area.buildings, (building) => building.building_name).map((building) => (
+            {naturalSort(
+              selection.area.buildings,
+              (building) => building.building_name,
+              historyIds.buildingNames,
+              (building) => building.building_name
+            ).map((building) => (
               <SelectionCard
                 key={building.building_id}
                 icon={<Building2 className="w-5 h-5" />}
                 title={building.building_name}
                 subtitle={`${building.floors.length} 层`}
                 onClick={() => handleSelectBuilding(building)}
+                isInHistory={historyIds.buildingNames.has(building.building_name)}
               />
             ))}
           </SelectionGrid>
@@ -330,13 +407,19 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId }: RoomSelecto
 
         {selection.step === 'floor' && selection.building && (
           <SelectionGrid>
-            {naturalSort(selection.building.floors, (floor) => floor.floor_name).map((floor) => (
+            {naturalSort(
+              selection.building.floors,
+              (floor) => floor.floor_name,
+              historyIds.floorIds,
+              (floor) => floor.floor_id
+            ).map((floor) => (
               <SelectionCard
                 key={floor.floor_id}
                 icon={<Layers className="w-5 h-5" />}
                 title={floor.floor_name}
                 subtitle={`${floor.rooms.length} 间`}
                 onClick={() => handleSelectFloor(floor)}
+                isInHistory={historyIds.floorIds.has(floor.floor_id)}
               />
             ))}
           </SelectionGrid>
@@ -345,19 +428,34 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId }: RoomSelecto
         {selection.step === 'room' && selection.floor && (
           <div className="space-y-2">
             <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
-              {naturalSort(selection.floor.rooms, (room) => room.room_name).map((room) => (
-                <button
-                  key={room.room_id}
-                  onClick={() => handleSelectRoom(room)}
-                  className={`p-2 rounded-xl text-xs font-medium transition-all ${
-                    room.room_id === selectedRoomId
-                      ? 'bg-[oklch(0.75_0.1_250)] text-white shadow-sm'
-                      : 'bg-gray-50 text-gray-700 hover:bg-[oklch(0.75_0.1_250_/0.1)] hover:text-[oklch(0.75_0.1_250)] border border-gray-100'
-                  }`}
-                >
-                  {room.room_name}
-                </button>
-              ))}
+              {naturalSort(
+                selection.floor.rooms,
+                (room) => room.room_name,
+                historyIds.roomIds,
+                (room) => room.room_id
+              ).map((room) => {
+                const isSelected = room.room_id === selectedRoomId;
+                const inHistory = historyIds.roomIds.has(room.room_id);
+                return (
+                  <button
+                    key={room.room_id}
+                    onClick={() => handleSelectRoom(room)}
+                    className={`p-2 rounded-xl text-xs font-medium transition-all relative ${
+                      isSelected
+                        ? 'bg-[oklch(0.75_0.1_250)] text-white shadow-sm'
+                        : inHistory
+                          ? 'bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200'
+                          : 'bg-gray-50 text-gray-700 hover:bg-[oklch(0.75_0.1_250_/0.1)] hover:text-[oklch(0.75_0.1_250)] border border-gray-100'
+                    }`}
+                    title={inHistory ? '该房间曾在历史记录中' : undefined}
+                  >
+                    {room.room_name}
+                    {inHistory && !isSelected && (
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
@@ -429,19 +527,38 @@ interface SelectionCardProps {
   title: string;
   subtitle: string;
   onClick: () => void;
+  isInHistory?: boolean;
 }
 
-function SelectionCard({ icon, title, subtitle, onClick }: SelectionCardProps) {
+function SelectionCard({ icon, title, subtitle, onClick, isInHistory = false }: SelectionCardProps) {
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center p-4 rounded-xl bg-gray-50 hover:bg-[oklch(0.75_0.1_250_/0.1)] border border-gray-100 hover:border-[oklch(0.75_0.1_250_/0.3)] transition-all group"
+      className={`flex flex-col items-center p-4 rounded-xl border transition-all group relative ${
+        isInHistory
+          ? 'bg-amber-50/80 border-amber-200 hover:bg-amber-100 hover:border-amber-300'
+          : 'bg-gray-50 border-gray-100 hover:bg-[oklch(0.75_0.1_250_/0.1)] hover:border-[oklch(0.75_0.1_250_/0.3)]'
+      }`}
+      title={isInHistory ? '该楼栋曾在历史记录中' : undefined}
     >
-      <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-[oklch(0.75_0.1_250)] group-hover:scale-110 transition-transform shadow-sm">
+      {isInHistory && (
+        <span className="absolute top-2 right-2">
+          <Clock className="w-3 h-3 text-amber-500" />
+        </span>
+      )}
+      <div className={`w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm ${
+        isInHistory 
+          ? 'bg-amber-100 text-amber-600' 
+          : 'bg-white text-[oklch(0.75_0.1_250)]'
+      }`}>
         {icon}
       </div>
-      <span className="mt-2 text-sm font-medium text-gray-700 group-hover:text-[oklch(0.75_0.1_250)]">{title}</span>
-      <span className="text-xs text-gray-400">{subtitle}</span>
+      <span className={`mt-2 text-sm font-medium ${
+        isInHistory 
+          ? 'text-amber-800 group-hover:text-amber-900' 
+          : 'text-gray-700 group-hover:text-[oklch(0.75_0.1_250)]'
+      }`}>{title}</span>
+      <span className={`text-xs ${isInHistory ? 'text-amber-600/70' : 'text-gray-400'}`}>{subtitle}</span>
     </button>
   );
 }

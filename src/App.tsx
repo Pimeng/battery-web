@@ -26,8 +26,8 @@ function App() {
   // History
   const [history, setHistory] = useLocalStorage<HistoryItem[]>('battery-query-history', []);
   
-  // UI states
-  const [showHistoryPanel, setShowHistoryPanel] = useState(false);
+  // UI states - 历史记录面板默认显示
+  const showHistoryPanel = true;
   const [showBatteryResult, setShowBatteryResult] = useState(false);
   const batteryResultRef = useRef<HTMLDivElement>(null);
   
@@ -211,7 +211,6 @@ function App() {
         batteryResultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     });
-    setShowHistoryPanel(false);
   };
 
   // Clear history
@@ -260,16 +259,6 @@ function App() {
             </div>
             
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowHistoryPanel(!showHistoryPanel)}
-                className={`p-2.5 rounded-xl transition-all ${
-                  showHistoryPanel 
-                    ? 'bg-[oklch(0.75_0.1_250)] text-white' 
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                <History className="w-5 h-5" />
-              </button>
               {notice && (
                 <button
                   onClick={() => setShowNotice(true)}
@@ -325,6 +314,7 @@ function App() {
                   data={roomsData}
                   onSelectRoom={handleRoomSelect}
                   selectedRoomId={selectedRoom?.room_id || null}
+                  history={history}
                 />
               </CardContent>
             </Card>
