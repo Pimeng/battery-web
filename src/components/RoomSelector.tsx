@@ -548,8 +548,8 @@ function SelectionCard({ icon, title, subtitle, onClick, isInHistory = false }: 
       )}
       <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm ${
         isInHistory 
-          ? 'bg-amber-100 text-amber-600' 
-          : 'bg-white text-[oklch(0.75_0.1_250)]'
+          ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400' 
+          : 'bg-white dark:bg-gray-700 text-[oklch(0.75_0.1_250)]'
       }`}>
         <span className="w-4 h-4 sm:w-5 sm:h-5">{icon}</span>
       </div>
@@ -558,7 +558,7 @@ function SelectionCard({ icon, title, subtitle, onClick, isInHistory = false }: 
           ? 'text-amber-800 dark:text-amber-400 group-hover:text-amber-900 dark:group-hover:text-amber-300' 
           : 'text-gray-700 dark:text-gray-300 group-hover:text-[oklch(0.75_0.1_250)]'
       }`}>{title}</span>
-      <span className={`text-[10px] sm:text-xs ${isInHistory ? 'text-amber-600/70 dark:text-amber-500/70' : 'text-gray-400'}`}>{subtitle}</span>
+      <span className={`text-[10px] sm:text-xs ${isInHistory ? 'text-amber-600/70 dark:text-amber-500/70' : 'text-gray-400 dark:text-gray-500'}`}>{subtitle}</span>
     </button>
   );
 }

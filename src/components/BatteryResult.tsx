@@ -24,11 +24,11 @@ export function BatteryResult({ data, loading, error, roomName, buildingName }: 
                 </div>
               </div>
               {/* Floating elements */}
-              <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center animate-bounce">
-                <Zap className="w-4 h-4 text-yellow-500" />
+              <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center animate-bounce">
+                <Zap className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
               </div>
-              <div className="absolute -bottom-2 -left-2 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center animate-bounce" style={{ animationDelay: '0.2s' }}>
-                <Battery className="w-3 h-3 text-blue-500" />
+              <div className="absolute -bottom-2 -left-2 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center animate-bounce" style={{ animationDelay: '0.2s' }}>
+                <Battery className="w-3 h-3 text-blue-500 dark:text-blue-400" />
               </div>
             </div>
             
@@ -139,8 +139,8 @@ export function BatteryResult({ data, loading, error, roomName, buildingName }: 
   let batteryBgColor = 'bg-green-500';
   let batteryLightColor = 'bg-green-400';
   let batteryLevel = '充足';
-  let statusTextColor = 'text-green-600';
-  let statusBgColor = 'bg-green-50';
+  let statusTextColor = 'text-green-600 dark:text-green-400';
+  let statusBgColor = 'bg-green-50 dark:bg-green-900/30';
   
   if (quantity < 20) {
     batteryColor = '#ef4444'; // red-500
@@ -163,7 +163,7 @@ export function BatteryResult({ data, loading, error, roomName, buildingName }: 
   const percentage = Math.min(100, Math.max(5, (quantity / maxQuantity) * 100));
 
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors duration-300">
       <div className="p-4 sm:p-6 md:p-8">
         {/* Room Info Header */}
         <div className="text-center mb-4 sm:mb-6">

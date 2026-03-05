@@ -345,7 +345,7 @@ function App() {
                         value={roomInput}
                         onChange={(e) => setRoomInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleQueryClick()}
-                        className="pr-10 h-10 sm:h-11 rounded-xl border-gray-200 focus:border-[oklch(0.75_0.1_250)] focus:ring-[oklch(0.75_0.1_250_/0.2)] text-sm"
+                        className="pr-10 h-10 sm:h-11 rounded-xl border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 focus:border-[oklch(0.75_0.1_250)] focus:ring-[oklch(0.75_0.1_250_/0.2)] text-sm"
                       />
                       {roomInput && (
                         <button
@@ -385,7 +385,7 @@ function App() {
 
             {/* History Panel */}
             {showHistoryPanel && (
-              <Card className="border-0 shadow-sm animate-in slide-in-from-right duration-300">
+              <Card className="border-0 shadow-sm dark:bg-gray-800/50 dark:border dark:border-gray-700/50 animate-in slide-in-from-right duration-300">
                 <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-6">
                   <CardTitle className="text-sm sm:text-base font-medium flex items-center gap-2">
                     <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center text-[oklch(0.75_0.1_250)]">

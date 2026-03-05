@@ -64,7 +64,7 @@ export function HistoryList({ history, onSelect, onClear, onRemove }: HistoryLis
           {history.map((item, index) => (
             <div
               key={`${item.roomId}-${item.timestamp}`}
-              className="group flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-gray-50 hover:bg-[oklch(0.75_0.1_250_/0.05)] border border-transparent hover:border-[oklch(0.75_0.1_250_/0.2)] transition-all cursor-pointer"
+              className="group flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-[oklch(0.75_0.1_250_/0.05)] dark:hover:bg-[oklch(0.75_0.1_250_/0.1)] border border-transparent hover:border-[oklch(0.75_0.1_250_/0.2)] transition-all cursor-pointer"
               onClick={() => onSelect(item)}
             >
               <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center">
