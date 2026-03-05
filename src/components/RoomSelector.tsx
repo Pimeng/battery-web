@@ -1,7 +1,57 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { ChevronRight, MapPin, Building2, Layers, DoorOpen, Check, RotateCcw } from 'lucide-react';
 import type { RoomsTree, Area, Building, Floor, Room } from '@/types';
 import { Button } from '@/components/ui/button';
+
+/**
+ * 自然排序比较函数
+ * 支持数字大小排序（如 1, 2, 10 而不是 1, 10, 2）
+ * 支持中英文首字母排序
+ */
+function naturalSortCompare(a: string, b: string): number {
+  // 提取字符串中的数字和非数字部分
+  const extractParts = (str: string): (string | number)[] => {
+    return str.split(/(\d+)/).filter(Boolean).map(part => {
+      const num = parseInt(part, 10);
+      return isNaN(num) ? part : num;
+    });
+  };
+  
+  const partsA = extractParts(a);
+  const partsB = extractParts(b);
+  
+  const minLen = Math.min(partsA.length, partsB.length);
+  
+  for (let i = 0; i < minLen; i++) {
+    const partA = partsA[i];
+    const partB = partsB[i];
+    
+    if (typeof partA === 'number' && typeof partB === 'number') {
+      // 都是数字，按数值比较
+      if (partA !== partB) {
+        return partA - partB;
+      }
+    } else {
+      // 至少有一个是字符串，使用本地化比较
+      const strA = String(partA);
+      const strB = String(partB);
+      const comparison = strA.localeCompare(strB, 'zh-CN', { sensitivity: 'base' });
+      if (comparison !== 0) {
+        return comparison;
+      }
+    }
+  }
+  
+  // 如果前面都相同，按长度比较
+  return partsA.length - partsB.length;
+}
+
+/**
+ * 对数组进行自然排序
+ */
+function naturalSort<T extends { [key: string]: any }>(array: T[], keyExtractor: (item: T) => string): T[] {
+  return [...array].sort((a, b) => naturalSortCompare(keyExtractor(a), keyExtractor(b)));
+}
 
 interface RoomSelectorProps {
   data: RoomsTree | null;
@@ -191,34 +241,59 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId }: RoomSelecto
         />
       </div>
 
-      {/* Selection Path */}
+      {/* Selection Path - 可点击回退的面包屑导航 */}
       {selection.area && (
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-gray-50 text-xs">
-          <span className="font-medium text-gray-700">{selection.area.area_name}</span>
+        <div className="flex items-center gap-1.5 p-3 rounded-xl bg-gray-50 text-xs">
+          {/* 分区 - 点击回退到分区选择 */}
+          <button
+            onClick={() => handleBack('area')}
+            className="font-medium text-gray-700 hover:text-[oklch(0.65_0.12_250)] hover:bg-[oklch(0.75_0.1_250_/0.1)] px-2 py-1 rounded-lg transition-all"
+            title="点击回退到分区选择"
+          >
+            {selection.area.area_name}
+          </button>
+          
           {selection.building && (
             <>
-              <ChevronRight className="w-3 h-3 text-gray-400" />
-              <span className="font-medium text-gray-700">{selection.building.building_name}</span>
+              <ChevronRight className="w-3 h-3 text-gray-400 flex-shrink-0" />
+              {/* 楼栋 - 点击回退到楼栋选择 */}
+              <button
+                onClick={() => handleBack('building')}
+                className="font-medium text-gray-700 hover:text-[oklch(0.65_0.12_250)] hover:bg-[oklch(0.75_0.1_250_/0.1)] px-2 py-1 rounded-lg transition-all"
+                title="点击回退到楼栋选择"
+              >
+                {selection.building.building_name}
+              </button>
             </>
           )}
           {selection.floor && (
             <>
-              <ChevronRight className="w-3 h-3 text-gray-400" />
-              <span className="font-medium text-gray-700">{selection.floor.floor_name}</span>
+              <ChevronRight className="w-3 h-3 text-gray-400 flex-shrink-0" />
+              {/* 楼层 - 点击回退到楼层选择 */}
+              <button
+                onClick={() => handleBack('floor')}
+                className="font-medium text-gray-700 hover:text-[oklch(0.65_0.12_250)] hover:bg-[oklch(0.75_0.1_250_/0.1)] px-2 py-1 rounded-lg transition-all"
+                title="点击回退到楼层选择"
+              >
+                {selection.floor.floor_name}
+              </button>
             </>
           )}
           {selection.room && (
             <>
-              <ChevronRight className="w-3 h-3 text-gray-400" />
-              <span className="font-medium text-[oklch(0.75_0.1_250)]">{selection.room.room_name}</span>
+              <ChevronRight className="w-3 h-3 text-gray-400 flex-shrink-0" />
+              {/* 房间 - 仅展示，不可点击 */}
+              <span className="font-medium text-[oklch(0.65_0.12_250)] bg-[oklch(0.75_0.1_250_/0.15)] px-2 py-1 rounded-lg">
+                {selection.room.room_name}
+              </span>
             </>
           )}
           <button
             onClick={handleReset}
-            className="ml-auto p-1 rounded hover:bg-gray-200 transition-colors"
+            className="ml-auto p-1.5 rounded-lg hover:bg-gray-200 transition-colors"
             title="重新选择"
           >
-            <RotateCcw className="w-3 h-3 text-gray-400" />
+            <RotateCcw className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
           </button>
         </div>
       )}
@@ -227,7 +302,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId }: RoomSelecto
       <div className="min-h-[200px]">
         {selection.step === 'area' && (
           <SelectionGrid>
-            {data.areas.map((area) => (
+            {naturalSort(data.areas, (area) => area.area_name).map((area) => (
               <SelectionCard
                 key={area.area_id}
                 icon={<MapPin className="w-5 h-5" />}
@@ -241,7 +316,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId }: RoomSelecto
 
         {selection.step === 'building' && selection.area && (
           <SelectionGrid>
-            {selection.area.buildings.map((building) => (
+            {naturalSort(selection.area.buildings, (building) => building.building_name).map((building) => (
               <SelectionCard
                 key={building.building_id}
                 icon={<Building2 className="w-5 h-5" />}
@@ -255,7 +330,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId }: RoomSelecto
 
         {selection.step === 'floor' && selection.building && (
           <SelectionGrid>
-            {selection.building.floors.map((floor) => (
+            {naturalSort(selection.building.floors, (floor) => floor.floor_name).map((floor) => (
               <SelectionCard
                 key={floor.floor_id}
                 icon={<Layers className="w-5 h-5" />}
@@ -270,7 +345,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId }: RoomSelecto
         {selection.step === 'room' && selection.floor && (
           <div className="space-y-2">
             <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
-              {selection.floor.rooms.map((room) => (
+              {naturalSort(selection.floor.rooms, (room) => room.room_name).map((room) => (
                 <button
                   key={room.room_id}
                   onClick={() => handleSelectRoom(room)}
