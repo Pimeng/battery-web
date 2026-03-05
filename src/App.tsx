@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Search, Zap, History, Trash2, Bell, MapPin } from 'lucide-react';
+import { Search, Zap, History, Trash2, Bell, MapPin, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,6 +28,8 @@ function App() {
   
   // UI states
   const [showHistoryPanel, setShowHistoryPanel] = useState(false);
+  const [showBatteryResult, setShowBatteryResult] = useState(false);
+  const batteryResultRef = useRef<HTMLDivElement>(null);
   
   // Ref to track if URL params have been processed
   const urlParamsProcessed = useRef(false);
@@ -78,6 +80,7 @@ function App() {
               setSelectedRoom(room);
               setSelectedBuildingName(building.building_name);
               setRoomInput(roomId);
+              setShowBatteryResult(true);
               // Auto query
               handleQuery(roomId, room.room_name, building.building_name);
               return;
@@ -116,6 +119,9 @@ function App() {
   const handleQueryClick = () => {
     if (!roomInput.trim()) return;
     
+    // Show battery result section
+    setShowBatteryResult(true);
+    
     // Try to find room info
     let roomName = roomInput;
     let buildingName = '未知楼栋';
@@ -137,7 +143,12 @@ function App() {
       }
     }
     
-    handleQuery(roomInput.trim(), roomName, buildingName);
+    handleQuery(roomInput.trim(), roomName, buildingName).then(() => {
+      // Scroll to battery result after query
+      setTimeout(() => {
+        batteryResultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    });
   };
 
   // Handle room selection from tree
@@ -145,6 +156,8 @@ function App() {
     setSelectedRoom(room);
     setSelectedBuildingName(buildingName);
     setRoomInput(room.room_id);
+    // Show battery result section
+    setShowBatteryResult(true);
     // Auto query when room is selected - directly call queryBattery to avoid closure issues
     queryBattery(room.room_id).then((success) => {
       if (success) {
@@ -162,6 +175,11 @@ function App() {
           // Add to front, limit to 20
           return [newItem, ...filtered].slice(0, 20);
         });
+        
+        // Scroll to battery result after a short delay to allow render
+        setTimeout(() => {
+          batteryResultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
       }
     });
   }, [queryBattery, setHistory]);
@@ -170,6 +188,7 @@ function App() {
   const handleHistorySelect = (item: HistoryItem) => {
     setRoomInput(item.roomId);
     setSelectedBuildingName(item.buildingName);
+    setShowBatteryResult(true);
     
     // Find room info
     if (roomsData) {
@@ -186,7 +205,12 @@ function App() {
       }
     }
     
-    handleQuery(item.roomId, item.roomName, item.buildingName);
+    handleQuery(item.roomId, item.roomName, item.buildingName).then(() => {
+      // Scroll to battery result after query
+      setTimeout(() => {
+        batteryResultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    });
     setShowHistoryPanel(false);
   };
 
@@ -205,6 +229,7 @@ function App() {
     setRoomInput('');
     setSelectedRoom(null);
     setSelectedBuildingName('');
+    setShowBatteryResult(false);
     resetResult();
     // Clear URL params
     window.history.replaceState({}, '', window.location.pathname);
@@ -260,19 +285,30 @@ function App() {
 
       {/* Main content */}
       <main className="max-w-5xl mx-auto px-4 py-6">
-        {/* Primary: Battery Result Display */}
-        <div className="mb-6">
-          <BatteryResult
-            data={data}
-            loading={loading}
-            error={error}
-            roomName={selectedRoom?.room_name}
-            buildingName={selectedBuildingName}
-          />
-        </div>
+        {/* Primary: Battery Result Display - Only show after selection */}
+        {showBatteryResult && (
+          <div ref={batteryResultRef} className="mb-6 scroll-mt-24">
+            <BatteryResult
+              data={data}
+              loading={loading}
+              error={error}
+              roomName={selectedRoom?.room_name}
+              buildingName={selectedBuildingName}
+            />
+          </div>
+        )}
 
-        {/* Secondary: Room Selection & Quick Query */}
+        {/* Room Selection & Quick Query */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Scroll hint - shown when battery result is hidden */}
+          {!showBatteryResult && (
+            <div className="lg:col-span-3 flex justify-center">
+              <div className="flex items-center gap-2 text-sm text-gray-400 animate-bounce">
+                <span>请选择房间查看电量</span>
+                <ChevronDown className="w-4 h-4" />
+              </div>
+            </div>
+          )}
           {/* Room Selector */}
           <div className="lg:col-span-2">
             <Card className="border-0 shadow-sm">
