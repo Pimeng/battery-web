@@ -246,15 +246,15 @@ function App() {
 
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div className="max-w-5xl mx-auto px-4 py-4">
+        <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[oklch(0.75_0.1_250)] flex items-center justify-center shadow-sm">
-                <Zap className="w-5 h-5 text-white" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[oklch(0.75_0.1_250)] flex items-center justify-center shadow-sm">
+                <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-gray-800">电量查询</h1>
-                <p className="text-xs text-gray-500">广州华夏职业学院</p>
+                <h1 className="text-base sm:text-lg font-bold text-gray-800">电量查询</h1>
+                <p className="text-[10px] sm:text-xs text-gray-500">喵喵喵？</p>
               </div>
             </div>
             
@@ -262,9 +262,10 @@ function App() {
               {notice && (
                 <button
                   onClick={() => setShowNotice(true)}
-                  className="p-2.5 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
+                  className="p-2 sm:p-2.5 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
+                  aria-label="查看通知"
                 >
-                  <Bell className="w-5 h-5" />
+                  <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               )}
             </div>
@@ -273,7 +274,7 @@ function App() {
       </header>
 
       {/* Main content */}
-      <main className="max-w-5xl mx-auto px-4 py-6">
+      <main className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
         {/* Primary: Battery Result Display - Only show after selection */}
         {showBatteryResult && (
           <div ref={batteryResultRef} className="mb-6 scroll-mt-24">
@@ -288,11 +289,11 @@ function App() {
         )}
 
         {/* Room Selection & Quick Query */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Scroll hint - shown when battery result is hidden */}
           {!showBatteryResult && (
             <div className="lg:col-span-3 flex justify-center">
-              <div className="flex items-center gap-2 text-sm text-gray-400 animate-bounce">
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-400 animate-bounce">
                 <span>请选择房间查看电量</span>
                 <ChevronDown className="w-4 h-4" />
               </div>
@@ -301,15 +302,15 @@ function App() {
           {/* Room Selector */}
           <div className="lg:col-span-2">
             <Card className="border-0 shadow-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base font-medium flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center text-[oklch(0.75_0.1_250)]">
-                    <MapPin className="w-4 h-4" />
+              <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-6">
+                <CardTitle className="text-sm sm:text-base font-medium flex items-center gap-2">
+                  <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center text-[oklch(0.75_0.1_250)]">
+                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </span>
                   选择房间
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="px-4 sm:px-6">
                 <RoomSelector
                   data={roomsData}
                   onSelectRoom={handleRoomSelect}
@@ -321,19 +322,19 @@ function App() {
           </div>
 
           {/* Right panel: Quick Query & History */}
-          <div className="space-y-6">
+          <div className="lg:col-span-1 space-y-4 sm:space-y-6">
             {/* Quick Query Card */}
             <Card className="border-0 shadow-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base font-medium flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center text-[oklch(0.75_0.1_250)]">
-                    <Search className="w-4 h-4" />
+              <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-6">
+                <CardTitle className="text-sm sm:text-base font-medium flex items-center gap-2">
+                  <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center text-[oklch(0.75_0.1_250)]">
+                    <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </span>
                   快速查询
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="px-4 sm:px-6">
+                <div className="space-y-2.5 sm:space-y-3">
                   <div className="flex gap-2">
                     <div className="relative flex-1">
                       <Input
@@ -341,12 +342,13 @@ function App() {
                         value={roomInput}
                         onChange={(e) => setRoomInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleQueryClick()}
-                        className="pr-10 h-11 rounded-xl border-gray-200 focus:border-[oklch(0.75_0.1_250)] focus:ring-[oklch(0.75_0.1_250_/0.2)]"
+                        className="pr-10 h-10 sm:h-11 rounded-xl border-gray-200 focus:border-[oklch(0.75_0.1_250)] focus:ring-[oklch(0.75_0.1_250_/0.2)] text-sm"
                       />
                       {roomInput && (
                         <button
                           onClick={handleClear}
                           className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                          aria-label="清空输入"
                         >
                           <Trash2 className="w-4 h-4 text-gray-400" />
                         </button>
@@ -355,21 +357,22 @@ function App() {
                     <Button
                       onClick={handleQueryClick}
                       disabled={!roomInput.trim() || loading}
-                      className="h-11 px-5 rounded-xl bg-[oklch(0.75_0.1_250)] hover:bg-[oklch(0.7_0.12_250)] text-white shadow-sm disabled:opacity-50"
+                      className="h-10 sm:h-11 px-4 sm:px-5 rounded-xl bg-[oklch(0.75_0.1_250)] hover:bg-[oklch(0.7_0.12_250)] text-white shadow-sm disabled:opacity-50"
+                      aria-label="查询"
                     >
                       {loading ? (
-                        <span className="animate-spin">⏳</span>
+                        <span className="animate-spin text-sm">⏳</span>
                       ) : (
                         <Search className="w-4 h-4" />
                       )}
                     </Button>
                   </div>
                   
-                  <div className="p-3 rounded-xl bg-gray-50">
-                    <p className="text-xs text-gray-400">
+                  <div className="p-2.5 sm:p-3 rounded-xl bg-gray-50">
+                    <p className="text-[10px] sm:text-xs text-gray-400">
                       格式: 分区ID-楼栋ID--楼层ID-房间号
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
                       例: 1-1--45-1419
                     </p>
                   </div>
@@ -380,15 +383,15 @@ function App() {
             {/* History Panel */}
             {showHistoryPanel && (
               <Card className="border-0 shadow-sm animate-in slide-in-from-right duration-300">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-medium flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-lg bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center text-[oklch(0.75_0.1_250)]">
-                      <History className="w-4 h-4" />
+                <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-6">
+                  <CardTitle className="text-sm sm:text-base font-medium flex items-center gap-2">
+                    <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center text-[oklch(0.75_0.1_250)]">
+                      <History className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </span>
                     历史记录
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-4 sm:px-6">
                   <HistoryList
                     history={history}
                     onSelect={handleHistorySelect}
@@ -404,9 +407,9 @@ function App() {
 
       {/* Footer */}
       <footer className="mt-12 py-6 border-t border-gray-100">
-        <div className="max-w-5xl mx-auto px-4 text-center">
+        <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto px-3 sm:px-4 text-center">
           <p className="text-sm text-gray-400">
-            电量查询系统 · 广州华夏职业学院
+            非华夏官方，一切以官方数据为准
           </p>
           <p className="text-xs text-gray-300 mt-1">
             数据仅供参考，请以实际为准

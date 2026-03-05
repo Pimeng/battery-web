@@ -270,7 +270,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
   return (
     <div className="space-y-4">
       {/* Progress Steps */}
-      <div className="flex items-center justify-center gap-1 text-xs">
+      <div className="flex items-center justify-center gap-0.5 sm:gap-1 text-[10px] sm:text-xs overflow-x-auto py-1">
         <StepIndicator 
           icon={<MapPin className="w-3 h-3" />} 
           label="分区" 
@@ -278,7 +278,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
           completed={!!selection.area}
           onClick={() => selection.area && handleBack('area')}
         />
-        <ChevronRight className="w-3 h-3 text-gray-300" />
+        <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-gray-300 flex-shrink-0" />
         <StepIndicator 
           icon={<Building2 className="w-3 h-3" />} 
           label="楼栋" 
@@ -287,7 +287,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
           onClick={() => selection.building && selection.step !== 'area' && handleBack('building')}
           disabled={!selection.area}
         />
-        <ChevronRight className="w-3 h-3 text-gray-300" />
+        <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-gray-300 flex-shrink-0" />
         <StepIndicator 
           icon={<Layers className="w-3 h-3" />} 
           label="楼层" 
@@ -296,7 +296,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
           onClick={() => selection.floor && selection.step !== 'area' && selection.step !== 'building' && handleBack('floor')}
           disabled={!selection.building}
         />
-        <ChevronRight className="w-3 h-3 text-gray-300" />
+        <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-gray-300 flex-shrink-0" />
         <StepIndicator 
           icon={<DoorOpen className="w-3 h-3" />} 
           label="房间" 
@@ -308,7 +308,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
 
       {/* Selection Path - 可点击回退的面包屑导航 */}
       {selection.area && (
-        <div className="flex items-center gap-1.5 p-3 rounded-xl bg-gray-50 text-xs">
+        <div className="flex items-center gap-1.5 p-2.5 sm:p-3 rounded-xl bg-gray-50 text-[10px] sm:text-xs flex-wrap">
           {/* 分区 - 点击回退到分区选择 */}
           <button
             onClick={() => handleBack('area')}
@@ -427,7 +427,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
 
         {selection.step === 'room' && selection.floor && (
           <div className="space-y-2">
-            <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5 sm:gap-2">
               {naturalSort(
                 selection.floor.rooms,
                 (room) => room.room_name,
@@ -440,7 +440,7 @@ export function RoomSelector({ data, onSelectRoom, selectedRoomId, history = [] 
                   <button
                     key={room.room_id}
                     onClick={() => handleSelectRoom(room)}
-                    className={`p-2 rounded-xl text-xs font-medium transition-all relative ${
+                    className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-medium transition-all relative truncate ${
                       isSelected
                         ? 'bg-[oklch(0.75_0.1_250)] text-white shadow-sm'
                         : inHistory
@@ -498,7 +498,7 @@ function StepIndicator({ icon, label, active, completed, onClick, disabled }: St
     <button
       onClick={onClick}
       disabled={disabled || (!completed && !active)}
-      className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all ${
+      className={`flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-1 rounded-lg transition-all flex-shrink-0 ${
         active
           ? 'bg-[oklch(0.75_0.1_250)] text-white'
           : completed
@@ -506,8 +506,8 @@ function StepIndicator({ icon, label, active, completed, onClick, disabled }: St
             : 'bg-gray-100 text-gray-400 cursor-not-allowed'
       }`}
     >
-      {icon}
-      <span>{label}</span>
+      <span className="w-3 h-3 sm:w-3.5 sm:h-3.5">{icon}</span>
+      <span className="hidden sm:inline">{label}</span>
     </button>
   );
 }
@@ -515,7 +515,7 @@ function StepIndicator({ icon, label, active, completed, onClick, disabled }: St
 // Selection Grid Container
 function SelectionGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3">
       {children}
     </div>
   );
@@ -534,7 +534,7 @@ function SelectionCard({ icon, title, subtitle, onClick, isInHistory = false }: 
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center p-4 rounded-xl border transition-all group relative ${
+      className={`flex flex-col items-center p-3 sm:p-4 rounded-xl border transition-all group relative ${
         isInHistory
           ? 'bg-amber-50/80 border-amber-200 hover:bg-amber-100 hover:border-amber-300'
           : 'bg-gray-50 border-gray-100 hover:bg-[oklch(0.75_0.1_250_/0.1)] hover:border-[oklch(0.75_0.1_250_/0.3)]'
@@ -542,23 +542,23 @@ function SelectionCard({ icon, title, subtitle, onClick, isInHistory = false }: 
       title={isInHistory ? '该楼栋曾在历史记录中' : undefined}
     >
       {isInHistory && (
-        <span className="absolute top-2 right-2">
-          <Clock className="w-3 h-3 text-amber-500" />
+        <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2">
+          <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500" />
         </span>
       )}
-      <div className={`w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm ${
+      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm ${
         isInHistory 
           ? 'bg-amber-100 text-amber-600' 
           : 'bg-white text-[oklch(0.75_0.1_250)]'
       }`}>
-        {icon}
+        <span className="w-4 h-4 sm:w-5 sm:h-5">{icon}</span>
       </div>
-      <span className={`mt-2 text-sm font-medium ${
+      <span className={`mt-1.5 sm:mt-2 text-xs sm:text-sm font-medium truncate w-full text-center ${
         isInHistory 
           ? 'text-amber-800 group-hover:text-amber-900' 
           : 'text-gray-700 group-hover:text-[oklch(0.75_0.1_250)]'
       }`}>{title}</span>
-      <span className={`text-xs ${isInHistory ? 'text-amber-600/70' : 'text-gray-400'}`}>{subtitle}</span>
+      <span className={`text-[10px] sm:text-xs ${isInHistory ? 'text-amber-600/70' : 'text-gray-400'}`}>{subtitle}</span>
     </button>
   );
 }

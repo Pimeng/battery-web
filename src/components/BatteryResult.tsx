@@ -66,9 +66,9 @@ export function BatteryResult({ data, loading, error, roomName, buildingName }: 
           <div className="flex flex-col items-center justify-center">
             <div className="relative">
               {/* Animated battery outline */}
-              <div className="w-32 h-48 sm:w-40 sm:h-56 rounded-[2rem] border-4 border-[oklch(0.75_0.1_250)] p-3 relative overflow-hidden">
+              <div className="w-28 h-40 sm:w-36 sm:h-52 md:w-40 md:h-56 rounded-[1.5rem] sm:rounded-[2rem] border-4 border-[oklch(0.75_0.1_250)] p-2 sm:p-3 relative overflow-hidden">
                 {/* Battery cap */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-14 h-4 bg-[oklch(0.75_0.1_250)] rounded-t-xl" />
+                <div className="absolute -top-2.5 sm:-top-3 left-1/2 -translate-x-1/2 w-12 sm:w-14 h-3 sm:h-4 bg-[oklch(0.75_0.1_250)] rounded-t-lg sm:rounded-t-xl" />
                 
                 {/* Loading animation */}
                 <div className="absolute inset-3 rounded-2xl bg-gray-50 overflow-hidden">
@@ -81,7 +81,7 @@ export function BatteryResult({ data, loading, error, roomName, buildingName }: 
                 
                 {/* Center loader */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Loader2 className="w-10 h-10 text-white animate-spin drop-shadow-lg" />
+                  <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 text-white animate-spin drop-shadow-lg" />
                 </div>
               </div>
               
@@ -89,8 +89,8 @@ export function BatteryResult({ data, loading, error, roomName, buildingName }: 
               <div className="absolute inset-0 blur-3xl bg-[oklch(0.75_0.1_250_/0.3)] -z-10" />
             </div>
             
-            <p className="mt-8 text-base text-gray-500 font-medium">正在查询电量...</p>
-            <p className="mt-1 text-xs text-gray-400">请稍候</p>
+            <p className="mt-6 sm:mt-8 text-sm sm:text-base text-gray-500 font-medium">正在查询电量...</p>
+            <p className="mt-1 text-[10px] sm:text-xs text-gray-400">请稍候</p>
           </div>
         </div>
         
@@ -111,20 +111,20 @@ export function BatteryResult({ data, loading, error, roomName, buildingName }: 
       <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
         <div className="p-8 sm:p-12">
           <div className="flex flex-col items-center justify-center text-center">
-            <div className="relative mb-6">
-              <div className="w-32 h-48 sm:w-40 sm:h-56 rounded-[2rem] border-4 border-red-200 p-3 flex items-center justify-center bg-red-50/50">
-                <div className="w-20 h-20 rounded-2xl bg-red-100 flex items-center justify-center">
-                  <AlertCircle className="w-10 h-10 text-red-500" />
+            <div className="relative mb-4 sm:mb-6">
+              <div className="w-28 h-40 sm:w-36 sm:h-52 md:w-40 md:h-56 rounded-[1.5rem] sm:rounded-[2rem] border-4 border-red-200 p-2 sm:p-3 flex items-center justify-center bg-red-50/50">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-red-100 flex items-center justify-center">
+                  <AlertCircle className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" />
                 </div>
               </div>
-              <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-red-500 flex items-center justify-center">
-                <span className="text-white text-lg">!</span>
+              <div className="absolute -bottom-2 -right-2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-500 flex items-center justify-center">
+                <span className="text-white text-base sm:text-lg">!</span>
               </div>
             </div>
             
-            <h2 className="text-lg font-bold text-red-600 mb-2">查询失败</h2>
-            <p className="text-sm text-gray-500 max-w-xs">{error}</p>
-            <p className="mt-2 text-xs text-gray-400">请检查房间号是否正确，或稍后重试</p>
+            <h2 className="text-base sm:text-lg font-bold text-red-600 mb-2">查询失败</h2>
+            <p className="text-xs sm:text-sm text-gray-500 max-w-xs px-2">{error}</p>
+            <p className="mt-2 text-[10px] sm:text-xs text-gray-400">请检查房间号是否正确，或稍后重试</p>
           </div>
         </div>
       </div>
@@ -163,29 +163,29 @@ export function BatteryResult({ data, loading, error, roomName, buildingName }: 
   const percentage = Math.min(100, Math.max(5, (quantity / maxQuantity) * 100));
 
   return (
-    <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
-      <div className="p-6 sm:p-8">
+    <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+      <div className="p-4 sm:p-6 md:p-8">
         {/* Room Info Header */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-4 sm:mb-6">
           {buildingName && (
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-1">
-              <Building2 className="w-4 h-4" />
+            <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
+              <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               <span>{buildingName}</span>
             </div>
           )}
           {roomName && (
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">{roomName}</h2>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">{roomName}</h2>
           )}
-          <p className="text-xs text-gray-400 mt-1">房间号: {data.room}</p>
+          <p className="text-[10px] sm:text-xs text-gray-400 mt-1">房间号: {data.room}</p>
         </div>
 
         {/* Main Battery Display */}
         <div className="flex flex-col items-center">
           <div className="relative">
             {/* Battery Container */}
-            <div className="w-36 h-52 sm:w-44 sm:h-64 rounded-[2rem] border-[6px] border-gray-200 p-2 relative bg-gray-50">
+            <div className="w-28 h-44 sm:w-36 sm:h-56 md:w-44 md:h-64 rounded-[1.5rem] sm:rounded-[2rem] border-[5px] sm:border-[6px] border-gray-200 p-1.5 sm:p-2 relative bg-gray-50">
               {/* Battery Cap */}
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-16 h-4 bg-gray-200 rounded-t-xl" />
+              <div className="absolute -top-3 sm:-top-4 left-1/2 -translate-x-1/2 w-12 sm:w-16 h-3 sm:h-4 bg-gray-200 rounded-t-lg sm:rounded-t-xl" />
               
               {/* Battery Body Inner */}
               <div className="w-full h-full rounded-[1.5rem] bg-white relative overflow-hidden shadow-inner">
@@ -216,7 +216,7 @@ export function BatteryResult({ data, loading, error, roomName, buildingName }: 
                 {/* Percentage text inside battery */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <span 
-                    className="text-3xl sm:text-4xl font-bold drop-shadow-lg"
+                    className="text-2xl sm:text-3xl md:text-4xl font-bold drop-shadow-lg"
                     style={{ 
                       color: percentage > 50 ? 'white' : 'transparent',
                       WebkitTextStroke: percentage > 50 ? 'none' : 'none'
@@ -236,18 +236,18 @@ export function BatteryResult({ data, loading, error, roomName, buildingName }: 
           </div>
 
           {/* Quantity Display */}
-          <div className="mt-8 text-center">
-            <div className="flex items-baseline justify-center gap-2">
-              <span className="text-5xl sm:text-6xl font-bold text-gray-800 tracking-tight">{data.quantity}</span>
-              <span className="text-xl sm:text-2xl text-gray-500">{data.unit}</span>
+          <div className="mt-6 sm:mt-8 text-center">
+            <div className="flex items-baseline justify-center gap-1.5 sm:gap-2">
+              <span className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-800 tracking-tight">{data.quantity}</span>
+              <span className="text-lg sm:text-xl md:text-2xl text-gray-500">{data.unit}</span>
             </div>
-            <p className="mt-2 text-sm text-gray-500">{data.description}</p>
+            <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-gray-500">{data.description}</p>
           </div>
 
           {/* Status Badge */}
-          <div className="mt-6">
-            <span className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium ${statusBgColor} ${statusTextColor}`}>
-              <span className={`w-2.5 h-2.5 rounded-full ${batteryBgColor} animate-pulse`} />
+          <div className="mt-4 sm:mt-6">
+            <span className={`inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium ${statusBgColor} ${statusTextColor}`}>
+              <span className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full ${batteryBgColor} animate-pulse`} />
               电量{batteryLevel}
             </span>
           </div>
@@ -256,18 +256,18 @@ export function BatteryResult({ data, loading, error, roomName, buildingName }: 
 
       {/* Warning Banner for Low Battery */}
       {quantity < 30 && (
-        <div className="px-6 py-4 bg-red-50 border-t border-red-100">
-          <div className="flex items-center justify-center gap-2 text-red-600">
-            <AlertCircle className="w-5 h-5" />
-            <span className="text-sm font-medium">电量较低，建议及时充值</span>
+        <div className="px-4 sm:px-6 py-3 sm:py-4 bg-red-50 border-t border-red-100">
+          <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-red-600">
+            <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-xs sm:text-sm font-medium">电量较低，建议及时充值</span>
           </div>
         </div>
       )}
 
       {/* Footer info */}
-      <div className="px-6 py-3 bg-gray-50 border-t border-gray-100">
-        <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
-          <Clock className="w-3 h-3" />
+      <div className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-50 border-t border-gray-100">
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-gray-400">
+          <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
           <span>查询时间: {new Date().toLocaleString('zh-CN')}</span>
         </div>
       </div>

@@ -70,34 +70,35 @@ export function NoticeToast({ notice, onClose }: NoticeToastProps) {
 
   return (
     <div 
-      className={`fixed top-4 right-4 z-50 max-w-sm w-full transition-all duration-400 ease-out ${getAnimationClasses()}`}
+      className={`fixed top-3 sm:top-4 left-3 right-3 sm:left-auto sm:right-4 z-50 max-w-sm w-auto sm:w-full transition-all duration-400 ease-out ${getAnimationClasses()}`}
       style={{
         transitionTimingFunction: animationState === 'entering' 
           ? 'cubic-bezier(0.34, 1.56, 0.64, 1)' // 弹性效果
           : 'cubic-bezier(0.4, 0, 0.2, 1)'
       }}
     >
-      <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-black/5 border border-[oklch(0.75_0.1_250_/0.2)] overflow-hidden transform transition-transform duration-300 hover:scale-[1.02]">
+      <div className="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl shadow-black/5 border border-[oklch(0.75_0.1_250_/0.2)] overflow-hidden transform transition-transform duration-300 hover:scale-[1.02]">
         {/* Progress bar */}
         <div 
           className="h-1 bg-gradient-to-r from-[oklch(0.7_0.12_250)] to-[oklch(0.75_0.1_250)] transition-all duration-100"
           style={{ width: `${progress}%` }}
         />
         
-        <div className="p-4">
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center animate-pulse">
-              <Info className="w-4 h-4 text-[oklch(0.75_0.1_250)]" />
+        <div className="p-3 sm:p-4">
+          <div className="flex items-start gap-2.5 sm:gap-3">
+            <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[oklch(0.75_0.1_250_/0.1)] flex items-center justify-center animate-pulse">
+              <Info className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[oklch(0.75_0.1_250)]" />
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-sm text-gray-900">{notice.title}</h4>
-              <p className="mt-1 text-sm text-gray-600">{notice.body}</p>
+              <h4 className="font-medium text-xs sm:text-sm text-gray-900">{notice.title}</h4>
+              <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm text-gray-600">{notice.body}</p>
             </div>
             <button
               onClick={handleClose}
-              className="flex-shrink-0 p-1.5 rounded-full hover:bg-gray-100 transition-all duration-200 hover:rotate-90"
+              className="flex-shrink-0 p-1 sm:p-1.5 rounded-full hover:bg-gray-100 transition-all duration-200 hover:rotate-90"
+              aria-label="关闭通知"
             >
-              <X className="w-4 h-4 text-gray-400" />
+              <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" />
             </button>
           </div>
         </div>
